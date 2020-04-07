@@ -61,26 +61,28 @@ def print_results(results_dic, results_stats_dic, model,
                               False doesn't print anything(default) (bool) 
     Returns:
            None - simply printing results.
-    """    
-    print("Results for architecture: {}".format(model))
-    print("-------------------------------")
-    print('Number of Images: {}'.format(results_stats_dic['n_images']))
-    print('Number of Dog Images: {}'.format(results_stats_dic['n_dogs_img']))
-    print('Number of "Not-a" Dog Image: {}'.format(results_stats_dic['n_notdogs_img']))
+    """
+    print("")
+    print(f"Final Statistics")
+    print(f"CNN model architecture: {model}")
+    print(f"Number of images: {results_stats_dic['n_images']}")
+    print(f"Number of dog images: {results_stats_dic['n_dogs_img']}")
+    print(f"Number of \"Not-a\" Dog Images: {results_stats_dic['n_notdogs_img']}")
+    print(f"% Correct Dogs: {results_stats_dic['pct_correct_dogs']}")
+    print(f"% Correct Breed: {results_stats_dic['pct_correct_breed']}")
+    print(f"% Correct \"Not-a\" Dog: {results_stats_dic['pct_correct_notdogs']}")
+    print(f"% Match: {results_stats_dic['pct_label_matches']}")
 
-    for key in results_stats_dic:
-        if key.startswith("pct_"):
-            print("{}: {}".format(key, results_stats_dic[key]))
-
-    if print_incorrect_dogs:  # user wants to see extra info
-        if results_stats_dic['n_correct_dogs'] + results_stats_dic['n_correct_notdogs'] != results_stats_dic['n_images']:
-            for key in results_dic:
-                if results_dic[key][3] != results_dic[key][4]:
-                    print("Image {} classified incorrectly as {}".format(key, results_dic[key][1]))
-
+    if print_incorrect_dogs:
+        for key in results_dic:
+            if sum(results_dic[key][3:]) == 1:
+                print(f"Misclassified Dog")
+                print(f"Pet Image: {results_dic[key][0]}")
+                print(f"Classifier Label: {results_dic[key][1]}")
+    
     if print_incorrect_breed:
-        if results_stats_dic['n_correct_dogs'] != results_stats_dic['n_correct_breed']:
-            for key in results_dic:
-                if results_dic[key][3] == 1 and results_dic[key][4] == 1 and results_dic[key][2] == 0:
-                    print("Image {} classified incorrectly as {}".format(key, results_dic[key][1]))
-                
+        for key in results_dic:
+            if sum(results_dic[key][3:]) == 2 and results_dic[key][2] == 0:
+                print(f"Misclassified Breed")
+                print(f"Pet Image: {results_dic[key][0]}")
+                print(f"Classifier Label: {results_dic[key][1]}")

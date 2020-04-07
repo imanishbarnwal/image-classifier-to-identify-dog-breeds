@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/classify_images.py
 #                                                                             
-# PROGRAMMER: 
-# DATE CREATED:                                 
+# PROGRAMMER: Manish    
+# DATE CREATED:  07/04/2020      
 # REVISED DATE: 
 # PURPOSE: Create a function classify_images that uses the classifier function 
 #          to create the classifier labels and then compares the classifier 
@@ -12,7 +12,7 @@
 #             and as in_arg.dir for function call within main. 
 #            -The results dictionary as results_dic within classify_images 
 #             function and results for the functin call within main.
-#            -The CNN model architecture as model wihtin classify_images function
+#            -The CNN model architecture as model within classify_images function
 #             and in_arg.arch for the function call within main. 
 #           This function uses the extend function to add items to the list 
 #           that's the 'value' of the results dictionary. You will be adding the
@@ -65,53 +65,11 @@ def classify_images(images_dir, results_dic, model):
      Returns:
            None - results_dic is mutable data type so no return needed.         
     """
-  # Defining lists to populate dictionary 
-filenames = ["Beagle_01141.jpg", "Beagle_01125.jpg", "skunk_029.jpg" ]
-pet_labels = ["beagle", "beagle", "skunk"]
-classifier_labels = ["walker hound, walker foxhound", "beagle",
-                     "skunk, polecat, wood pussy"]
-pet_label_is_dog = [1, 1, 0]
-classifier_label_is_dog = [1, 1, 0]
-
-# Defining empty dictionary
-results_dic = dict()
-
-# Populates empty dictionary with both labels &indicates if they match (idx 2)
-for idx in range (0, len(filenames), 1):
-    # If first time key is assigned initialize the list with pet & 
-    # classifier labels
-    if filenames[idx] not in results_dic:
-        results_dic[filenames[idx]] = [ pet_labels[idx], classifier_labels[idx] ]
-
-    # Determine if pet_labels matches classifier_labels using in operator
-    # - so if pet label is 'in' classifier label it's a match
-    # ALSO since Key already exists because labels were added, append 
-    # value to end of list for idx 2 
-    # if pet image label was FOUND then there is a match 
-    if pet_labels[idx] in classifier_labels[idx]:
-        results_dic[filenames[idx]].append(1)
-
-    # if pet image label was NOT found then there is no match
-    else:
-        results_dic[filenames[idx]].append(0)
-
-# Populates dictionary with whether or not labels indicate a dog image (idx 3&4)
-for idx in range (0, len(filenames), 1):
-    # Key already exists, extend values to end of list for idx 3 & 4
-    results_dic[filenames[idx]].extend([pet_label_is_dog[idx], 
-                                       classifier_label_is_dog[idx]])
-
-# Iterates through the list to print the results for each filename
-for key in results_dic:
-    print("\nFilename=", key, "\npet_image Label=", results_dic[key][0],
-          "\nClassifier Label=", results_dic[key][1], "\nmatch=",
-          results_dic[key][2], "\nImage is dog=", results_dic[key][3],
-          "\nClassifier is dog=", results_dic[key][4])                        
-
-    # Provides classifications of the results
-    if sum(results_dic[key][2:]) == 3:
-        print("*Breed Match*")
-    if sum(results_dic[key][3:]) == 2:
-        print("*Is-a-Dog Match*")
-    if sum(results_dic[key][3:]) == 0 and results_dic[key][2] == 1:
-        print("*NOT-a-Dog Match*")
+    for filename in results_dic:
+      classifier_label = classifier(images_dir + filename, model)
+      classifier_label = classifier_label.lower().strip()
+      results_dic[filename].extend([classifier_label])
+      if results_dic[filename][0] in classifier_label:
+        results_dic[filename].extend([1])
+      else:
+        results_dic[filename].extend([0])
